@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Websockt client test</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+        <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    </head>
+    <body>
+        <h1>WebSocket test</h1>
+        <button id="connect" class="btn btn-default">Connect</button>
+        <button id="send" class="btn btn-default">Send</button>
+        <button id="close" class="btn btn-default">Close</button>
+        <button id="exit" class="btn btn-default">Exit</button>
+        <table id="conversation" class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Greetings</th>
+                </tr>
+            </thead>
+            <tbody id="greetings">
+            </tbody>
+        </table>
+        <script>
+            var ws = null;
+            $("#connect").on("click", function () {
+                ws = new WebSocket("ws://localhost:8881/echo");
+                console.log("connecting");
+                ws.onmessage = function (e) {
+                    $("#greetings").append("<tr><td>" + e.data + "</td></tr>");
+                };
+            });
+            $("#send").on("click", function () {
+                console.log("send");
+                ws.send("web client good");
+            });
+            $("#close").on("click", function () {
+                console.log("exiting");
+                ws.close();
+                ws = null;
+            });
+            $("#exit").on("click", function () {
+                $.get("http://localhost:8881/exit", {});
+            });
+        </script>
+    </body>
+</html>
